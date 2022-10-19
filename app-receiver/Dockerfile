@@ -1,3 +1,4 @@
+# syntax = docker/dockerfile:1.2
 ####################################################
 FROM python:3 as production_image
 
@@ -8,14 +9,17 @@ ENV DECRYPTION_KEY="/run/secrets/decryption_key"
 
 EXPOSE 8080
 
-# SOME
-# DOCKERFILE DIRECTIVES
-# ARE MISSING
+COPY receiver ./
+COPY tests ./
+COPY prepare-env.sh ./
+RUN mkdir -p /run/secrets
+COPY key ${DECRYPTION_KEY}
+RUN --mount=type=secret,id=decryption_key cat /run/secrets/decryption_key
 
 COPY Pipfile ./
 COPY Pipfile.lock ./
 
-RUN mkdir -p /usr/src/app-receiver/output
+RUN mkdir -p ${OUTPUT_DIR}
 RUN pip install --no-cache-dir pipenv
 RUN pipenv install --system --deploy --ignore-pipfile
 

@@ -34,7 +34,23 @@ def upload_file(filename):
     :return: A tuple with json data and status_code
     """
     save_location = "{0}/{1}.xml".format(settings.OUTPUT_DIR, filename)
-    # YOUR CODE
-    # SHOULD
-    # GO
-    # HERE
+    try:
+        if (filename == ''):
+            data = {'msg': 'No file selected', "status_code": 400}
+            return jsonify(data), 400
+        if ('file' not in request.files):
+            data = {'msg': 'File not found within the request', "status_code": 400}
+            return jsonify(data), 400
+        if(request.content_type.startswith(settings.VALID_CONTENT_TYPE)):
+            app.config['UPLOAD_FOLDER'] = save_location
+            vFile = request.files['file']
+            vFile.save(save_location)
+            data = {'msg': f'File is decrypted and saved to {save_location}', "status_code": 201}
+            return jsonify(data), 201
+        else:
+            data = {'msg': 'Invalid content-type', "status_code": 500}
+            return jsonify(data), 500
+    except Exception as err:
+        print(err.with_traceback)
+
+    

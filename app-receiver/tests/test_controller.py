@@ -1,3 +1,5 @@
+import os
+
 def test_health_check(client):
     """
     Validate is / responds with 200 and json response on GET.
@@ -6,7 +8,7 @@ def test_health_check(client):
     """
     resp = client.get("/")
     assert resp.status_code == 200
-    assert resp.json == {'msg': 'Server is healthy', 'status_code': 200}
+    assert resp.json == {'msg': 'Server is up', 'status_code': 200}
 
 
 def test_upload_file(client, tmp_path, set_mock_decrypty):
