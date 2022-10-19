@@ -12,9 +12,11 @@ EXPOSE 8080
 COPY receiver ./
 COPY tests ./
 COPY prepare-env.sh ./
+RUN ./prepare-env.sh
 RUN mkdir -p /run/secrets
-COPY key ${DECRYPTION_KEY}
-RUN --mount=type=secret,id=decryption_key cat /run/secrets/decryption_key
+RUN cp key ${DECRYPTION_KEY}
+RUN rm key
+RUN --mount=type=secret,id=decryption_key cat ${DECRYPTION_KEY}
 
 COPY Pipfile ./
 COPY Pipfile.lock ./
