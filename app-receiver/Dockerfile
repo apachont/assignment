@@ -1,22 +1,17 @@
-# syntax = docker/dockerfile:1.2
 ####################################################
 FROM python:3 as production_image
 
 ENV SERVER_IP="0.0.0.0"
 ENV SERVER_PORT="8080"
 ENV OUTPUT_DIR="/usr/src/app-receiver/output"
-ENV DECRYPTION_KEY="/run/secrets/decryption_key"
+ENV DECRYPTION_KEY_DIR="/run/secrets"
+ENV DECRYPTION_KEY="${DECRYPTION_KEY_DIR}/decryption_key"
 
 EXPOSE 8080
+RUN mkdir -p ${DECRYPTION_KEY_DIR}
 
 COPY receiver ./
 COPY tests ./
-COPY prepare-env.sh ./
-RUN ./prepare-env.sh
-RUN mkdir -p /run/secrets
-RUN cp key ${DECRYPTION_KEY}
-RUN rm key
-RUN --mount=type=secret,id=decryption_key cat ${DECRYPTION_KEY}
 
 COPY Pipfile ./
 COPY Pipfile.lock ./
