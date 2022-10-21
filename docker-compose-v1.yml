@@ -4,18 +4,23 @@ version: "3.9"
 services:
   app-receiver:
     build: ./app-receiver
-    volumes:
-      - ./output:/usr/src/app-receiver/output
-      - ./key:/run/secrets/decryption_key:ro
     image: app-receiver:latest
+    secrets:
+      - decryption_key
     ports:
       - 8080:8080
+    volumes:
+      - ./output:/usr/src/app-receiver/output
   app-sender:
     build: ./app-sender
+    image: app-sender:latest
+    secrets:
+      - encryption_key
     volumes:
       - ./input/:/usr/src/app-sender/input/
       - ./status-db:/usr/src/app-sender/status-db
-      - ./key:/run/secrets/encryption_key:ro
-    image: app-sender:latest
-
-    
+secrets:
+  decryption_key:
+    file: key
+  encryption_key:
+    file: key

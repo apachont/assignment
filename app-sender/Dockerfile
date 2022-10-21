@@ -9,8 +9,6 @@ ENV RECEIVER_ADDRESS="app-receiver"
 ENV RECEIVER_PORT="8080"
 ENV RECEIVER_URI="/upload"
 
-RUN mkdir -p ${ENCRYPTION_KEY_DIR}
-
 WORKDIR /usr/src/app-sender
 
 COPY ./sender ./sender/

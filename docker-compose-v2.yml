@@ -7,25 +7,24 @@
 version: "3.9"
 services:
   app-receiver:
-    # SOME
-    # PARAMETERS
-    # ARE MISSING
+    build: ./app-receiver
     image: app-receiver:latest
-    # SOME
-    # PARAMETERS
-    # ARE MISSING
+    secrets:
+      - source: app-sender-receiver-key
+        target: decryption_key
+    ports:
+      - 8080:8080
+    volumes:
+      - ./output/:/usr/src/app-receiver/output/
   app-sender:
-    # SOME
-    # PARAMETERS
-    # ARE MISSING
+    build: ./app-sender
     image: app-sender:latest
-    # SOME
-    # PARAMETERS
-    # ARE MISSING
-    # SOME
-    # PARAMETERS
-    # ARE MISSING
+    secrets:
+      - source: app-sender-receiver-key
+        target: encryption_key
+    volumes:
+      - ./input/:/usr/src/app-sender/input/
+      - ./status-db:/usr/src/app-sender/status-db
 secrets:
-# SOME
-# PARAMETERS
-# ARE MISSING
+  app-sender-receiver-key:
+    external: true
